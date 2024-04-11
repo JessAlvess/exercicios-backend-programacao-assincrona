@@ -1,7 +1,7 @@
 const produtos = require('../bancodedados/produtos')
 const { getStateFromZipcode } = require('utils-playground')
 
-async function encontrarProduto(idProduto) {
+async function encontreOProduto(idProduto) {
     return produtos.filter((produto) => {
         return produto.id === Number(idProduto)
     })
@@ -31,12 +31,12 @@ async function detalharProdutos(req, res) {
 
 async function calcularFrete(req, res) {
     const { idProduto, cep } = req.params
-    const produtoDetalhado = await encontrarProduto(idProduto)
+    const produtoDetalhado = await encontreOProduto(idProduto)
     const estadoDoCep = await getStateFromZipcode(String(cep))
     const valor = produtoDetalhado[0].valor
     const freteCalculado = await calculeOFrete(cep, valor)
 
-    const freteDoProdutos = {
+    const freteDoProduto = {
         "produto": {
             "id": produtoDetalhado[0].id,
             "nome": produtoDetalhado[0].nome,
@@ -45,7 +45,7 @@ async function calcularFrete(req, res) {
         "estado": estadoDoCep,
         "frete": freteCalculado
     }
-    res.send(freteDoProdutos)
+    res.send(freteDoProduto)
 }
 
 module.exports = {
